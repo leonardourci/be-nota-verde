@@ -2,7 +2,7 @@ import bcrypt from 'bcrypt'
 
 import BaseService from './BaseService'
 import { JWTHandler } from './../../utils'
-import { CustomError } from '../../utils/error'
+import { CustomError } from '../../utils/errors'
 import { EStatusCodes } from '../statusCodes'
 import { ILoginPayload, ILoginResponse, ISignupPayload, ISignupResponse } from '../../interfaces'
 

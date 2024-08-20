@@ -1,6 +1,6 @@
 import jwt from 'jsonwebtoken'
 
-import { CustomError } from './error'
+import { CustomError } from './errors'
 import { EStatusCodes } from './../domain/statusCodes'
 import { IGenerateTokenPayload, IPerformJsonCallback } from '../interfaces'
 

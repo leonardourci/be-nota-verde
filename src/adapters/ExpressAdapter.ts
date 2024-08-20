@@ -1,7 +1,7 @@
 import { Request, Response } from 'express'
 import { IPerformJsonCallback } from '../interfaces'
 import { EStatusCodes } from '../domain/statusCodes'
-import { JoiValidationError } from '../utils/error'
+import { JoiValidationError } from '../utils/errors'
 
 type TPerformJsonCallback = (payload: any) => Promise<IPerformJsonCallback<any>> | IPerformJsonCallback<any>
 

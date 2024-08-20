@@ -1,5 +1,5 @@
 import BaseController from './BaseController'
-import { JoiValidationError } from '../utils/error'
+import { JoiValidationError } from '../utils/errors'
 import { LoginPayloadValidator } from '../utils/validations'
 import { LoginService } from '../domain/services'
 import { EStatusCodes } from '../domain/statusCodes'
