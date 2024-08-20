@@ -1,22 +1,32 @@
-import { BaseController } from '.'
-import { InputValidationErrors } from '../utils/Error'
-import { LoginService } from '../domain/services'
+import BaseController from './BaseController'
+import { JoiValidationError } from '../utils/error'
 import { LoginPayloadValidator } from '../utils/validations'
-import {
-  ILoginPayload,
-  ILoginResponse
-} from '../interfaces'
+import { LoginService } from '../domain/services'
+import { EStatusCodes } from '../domain/statusCodes'
+import { ILoginPayload, ILoginResponse, IPerformJsonCallback, ISignupPayload } from '../interfaces'
 
-export class LoginController extends BaseController {
+export default class LoginController extends BaseController {
   private loginService = new LoginService(this.repository)
 
-  login = async (payload: ILoginPayload): Promise<ILoginResponse> => {
-    const { value, error } = LoginPayloadValidator.validate(payload)
+  login = async (payload: ILoginPayload): Promise<IPerformJsonCallback<ILoginResponse>> => {
+    const { value, error } = LoginPayloadValidator.validateLoginPayload(payload)
 
-    if (error) {
-      throw new InputValidationErrors(error)
+    if (error) throw new JoiValidationError(error)
+
+    return {
+      response: await this.loginService.login(value),
+      status: EStatusCodes.OK
     }
+  }
 
-    return this.loginService.login(value)
+  signup = async (payload: ISignupPayload): Promise<IPerformJsonCallback<any>> => {
+    const { value, error } = LoginPayloadValidator.validateSignupPayload(payload)
+
+    if (error) throw new JoiValidationError(error)
+
+    return {
+      response: await this.loginService.signup(value),
+      status: EStatusCodes.OK
+    }
   }
 }

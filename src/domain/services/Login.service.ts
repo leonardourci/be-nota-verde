@@ -1,20 +1,27 @@
-import { JWTHandler } from './../../utils/JWTHandler';
-import { BaseService } from '.'
-import {
-  ILoginPayload,
-  ILoginResponse
-} from '../../interfaces'
+import bcrypt from 'bcrypt'
 
-export class LoginService extends BaseService {
+import BaseService from './BaseService'
+import { JWTHandler } from './../../utils'
+import { CustomError } from '../../utils/error'
+import { EStatusCodes } from '../statusCodes'
+import { ILoginPayload, ILoginResponse, ISignupPayload, ISignupResponse } from '../../interfaces'
+
+const { HASH_SALT } = process.env
+
+export default class LoginService extends BaseService {
   login = async (payload: ILoginPayload): Promise<ILoginResponse> => {
-    const userInfo = await this.repository.getUserInfo(payload)
+    const userInfo = await this.repository.user.getUserByEmail(payload.email)
 
-    // validar senha com bcrypt HASH_SALT 10
+    const isValidPassword = bcrypt.compareSync(payload.password, userInfo.passwordHash)
 
+    if (!isValidPassword) throw new CustomError('Username or password is wrong', EStatusCodes.UNAUTHORIZED)
 
-    // se tudo der certo, gerar o token
-    const token = JWTHandler.generateToken({ userId: userInfo.id })
+    return { token: JWTHandler.generateToken({ userId: userInfo.id }) }
+  }
 
-    return { token }
+  signup = async (payload: ISignupPayload): Promise<ISignupResponse> => {
+    const passwordHash = bcrypt.hashSync(payload.password, Number(HASH_SALT) ?? '')
+
+    return this.repository.user.create({ ...payload, password: passwordHash })
   }
 }
