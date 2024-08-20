@@ -1,2 +1,3 @@
-export * from './Login.controller'
-export * from './BaseController'
+import LoginController from './Login.controller'
+
+export { LoginController }
