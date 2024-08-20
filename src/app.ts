@@ -2,7 +2,7 @@ import express from 'express'
 import cors from 'cors'
 
 import { JWTHandler } from './utils'
-import { ExpressAdapter } from './Adapters'
+import { ExpressAdapter } from './adapters'
 import { loginRoutes } from './routes'
 
 const app = express()
@@ -19,6 +19,6 @@ app.use('/login', loginRoutes)
 
 // all the requests below needs a JWT 'authorization' headers key
 // example: { headers: { authorization: secret_example } }
-app.use(ExpressAdapter.perform(JWTHandler.verifyToken))
+app.use(ExpressAdapter.performJson(JWTHandler.verifyToken))
 
 export default app
